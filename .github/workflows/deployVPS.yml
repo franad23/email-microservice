@@ -24,14 +24,14 @@ jobs:
         run: npm run build
 
       - name: Create .env file
-        run: |
-          echo "PORT=${{ secrets.PORT }}" > dist/.env
-          echo "API_KEY=${{ secrets.API_KEY }}" >> dist/.env
-          echo "OTHER_VAR=${{ secrets.OTHER_VAR }}" >> dist/.env
+        uses: spicy-pizza/dotenv-action@v1
+        with:
+          envs: |
+            PORT=${{ secrets.PORT }}
+            API_KEY=${{ secrets.API_KEY }}
+            OTHER_VAR=${{ secrets.OTHER_VAR }}
         env:
-          PORT: ${{ secrets.PORT }}
-          API_KEY: ${{ secrets.API_KEY }}
-          OTHER_VAR: ${{ secrets.OTHER_VAR }}
+          TARGET_DIR: dist
 
       - name: Copy Docker and Nginx files
         run: |
@@ -50,7 +50,7 @@ jobs:
           target: ${{ secrets.TARGETPATH }}
 
       - name: Run Docker Compose on VPS
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
