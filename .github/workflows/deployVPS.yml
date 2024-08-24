@@ -43,4 +43,5 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.TARGETPATHDOCKER }}
+            ls
             docker compose up -d
