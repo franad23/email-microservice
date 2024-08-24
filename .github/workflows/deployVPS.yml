@@ -1,0 +1,55 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Build project
+        run: npm run build
+      - name: Create .env file
+         uses: spicy-pizza/dotenv-action@v1
+         with:
+           envs: |
+             PORT=${{ secrets.PORT }}
+             API_KEY=${{ secrets.API_KEY }}
+             OTHER_VAR=${{ secrets.OTHER_VAR }}
+         env:
+           TARGET_DIR: dist
+      - name: Copy Docker and Nginx files
+        run: |
+          mkdir -p dist/nginx
+          cp Dockerfile dist/
+          cp nginx.conf dist/
+          cp docker-compose.yml dist/
+      - name: Deploy to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "dist/*"
+          target: ${{ secrets.TARGETPATH }}
+      - name: Run Docker Compose on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd ${{ secrets.TARGETPATH }}
+            docker compose down
+            docker compose up -d
+        

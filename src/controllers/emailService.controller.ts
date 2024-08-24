@@ -9,7 +9,6 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 const emailServiceController = async (req: Request, res: Response) => {
   const { html, email, subject, text }:IEmailBody = req.body;
-  console.log({ html, email, subject, text });
   const msg = {
     to: email,
     from: process.env.EMAIL_SENDER as string,
