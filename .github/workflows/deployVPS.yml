@@ -24,7 +24,6 @@ jobs:
         run: npm run build
       - name: Copy Docker and Nginx files
         run: |
-          mkdir -p dist/nginx
           cp Dockerfile dist/
 
       - name: Deploy to VPS
