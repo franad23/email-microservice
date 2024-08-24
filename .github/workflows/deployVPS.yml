@@ -24,14 +24,13 @@ jobs:
         run: npm run build
 
       - name: Create .env file
-        uses: spicy-pizza/dotenv-action@v1
+        uses: SpicyPizza/create-envfile@v2.0
         with:
-          envs: |
-            PORT=${{ secrets.PORT }}
-            API_KEY=${{ secrets.API_KEY }}
-            OTHER_VAR=${{ secrets.OTHER_VAR }}
-        env:
-          TARGET_DIR: dist
+          envkey_PORT: ${{ secrets.PORT }}
+          envkey_API_KEY: ${{ secrets.API_KEY }}
+          envkey_OTHER_VAR: ${{ secrets.OTHER_VAR }}
+          directory: dist
+          file_name: .env
 
       - name: Copy Docker and Nginx files
         run: |
