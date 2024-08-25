@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: email-microservice
     ports:
       - '3000:5000'
     networks:
