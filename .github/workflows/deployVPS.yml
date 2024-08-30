@@ -15,14 +15,21 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
 
+      - name: Create env file
+        run: |
+          touch .env
+          echo "SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}" >> .env
+          echo "EMAIL_SENDER=${{ secrets.SENDGRID_FROM_EMAIL }}" >> .env
+          echo "LOCAL_PORT=${{ secrets.SENDGRID_FROM_NAME }}" >> .env
+
       - name: Build project
         run: npm run build
-      - name: Copy Docker and Nginx files
+      - name: Copy Docker files in dist folder
         run: |
           cp docker-compose.yml dist/
           cp Dockerfile dist/
@@ -44,5 +51,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             cd ${{ secrets.TARGETPATHDOCKER }}
-            ls
             docker compose up -d
