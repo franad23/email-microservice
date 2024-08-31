@@ -6,7 +6,5 @@ services:
     image: email-microservice
     ports:
       - '3000:5000'
-    networks:
-      - app-network
     restart: unless-stopped
     container_name: email-microservice
